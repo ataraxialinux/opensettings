@@ -17,20 +17,12 @@ AC_CONFIG_MACRO_DIR([m4])
 
 AC_CHECK_HEADERS(unistd.h)
 
-DBUS_GLIB_REQUIRED_VERSION=0.74
-GLIB_REQUIRED_VERSION=2.29.14
-GCONF_REQUIRED_VERSION=2.6.1
-GIO_REQUIRED_VERSION=2.26.0
-
-PKG_CHECK_MODULES(SETTINGS_DAEMON,
-        glib-2.0 >= $GLIB_REQUIRED_VERSION
-        gio-2.0 >= $GIO_REQUIRED_VERSION
-        gconf-2.0 >= $GCONF_REQUIRED_VERSION
-        gmodule-2.0
-        gthread-2.0
-        dbus-glib-1 >= $DBUS_GLIB_REQUIRED_VERSION
-	  gsettings-desktop-schemas >= 0.1.2
-)
+PKG_CHECK_MODULES(GLIB, glib-2.0)
+PKG_CHECK_MODULES(GIO, gio-2.0)
+PKG_CHECK_MODULES(GMODULE, gmodule-2.0)
+PKG_CHECK_MODULES(GTHREAD, gthread-2.0)
+PKG_CHECK_MODULES(DBUSGLIB, dbus-glib-1)
+PKG_CHECK_MODULES(POLKIT, polkit-gobject-1 dbus-1)
 
 AC_CONFIG_FILES([src/datetime/org.opensettings.datetimemechanism.policy src/datetime/org.opensettings.DateTimeMechanism.service])
 
