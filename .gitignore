@@ -31,6 +31,6 @@ libtool
 install-sh
 Makefile
 src/Makefile
-src/datetime/datetime-mechanism-glue.h
+src/datetime/datetime-glue.h
 .deps
 .libs
