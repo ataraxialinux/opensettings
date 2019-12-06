@@ -31,8 +31,6 @@ libtool
 install-sh
 Makefile
 src/Makefile
-src/datetime/org.opensettings.DateTimeMechanism.service
-src/datetime/org.opensettings.datetimemechanism.policy
 src/datetime/datetime-mechanism-glue.h
 .deps
 .libs
