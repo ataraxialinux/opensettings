@@ -1,6 +1,7 @@
 dbus_servicesdir = $(datadir)/dbus-1/system-services
 dbus_confdir = $(datadir)/dbus-1/system.d
 polkitdir = $(datadir)/polkit-1/actions
+autorundir = $(sysconfdir)/xdg/autostart
 
 dbus_services_in_files = org.opensettings.DateTimeMechanism.service.in
 polkit_in_files = org.opensettings.datetimemechanism.policy.in
@@ -37,6 +38,16 @@ opensettings_datetime_SOURCES = \
 	system-timezone.h
 
 BUILT_SOURCES = datetime-glue.h
+
+install-data-hook:
+	$(mkinstalldirs) $(DESTDIR)$(autorundir)
+	$(mkinstalldirs) $(DESTDIR)$(dbus_servicesdir)
+	$(mkinstalldirs) $(DESTDIR)$(dbus_confdir)
+	$(mkinstalldirs) $(DESTDIR)$(polkitdir)
+	install -m644 org.opensettings.DateTimeMechanism.desktop $(DESTDIR)$(autorundir)
+	install -m644 org.opensettings.DateTimeMechanism.service $(DESTDIR)$(dbus_servicesdir)
+	install -m644 org.opensettings.DateTimeMechanism.conf $(DESTDIR)$(dbus_confdir)
+	install -m644 org.opensettings.datetimemechanism.policy $(DESTDIR)$(polkitdir)
 
 CLEANFILES = 		\
 	org.opensettings.DateTimeMechanism.service	\
