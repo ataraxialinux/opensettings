@@ -22,7 +22,7 @@ opensettings_datetime_CFLAGS = \
 
 opensettings_datetime_LDADD = \
         @GLIB_LIBS@ \
-        @@DBUSGLIB_LIBS@ \
+        @DBUSGLIB_LIBS@ \
         @POLKIT_LIBS@
 
 opensettings_datetime_SOURCES = \
@@ -41,4 +41,5 @@ BUILT_SOURCES = datetime-glue.h
 CLEANFILES = 		\
 	org.opensettings.DateTimeMechanism.service	\
 	org.opensettings.datetimemechanism.policy	\
+	org.opensettings.DateTimeMechanism.desktop \
 	$(BUILT_SOURCES)

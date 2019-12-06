@@ -24,7 +24,7 @@ PKG_CHECK_MODULES(GTHREAD, gthread-2.0)
 PKG_CHECK_MODULES(DBUSGLIB, dbus-glib-1)
 PKG_CHECK_MODULES(POLKIT, polkit-gobject-1 dbus-1)
 
-AC_CONFIG_FILES([src/datetime/org.opensettings.datetimemechanism.policy src/datetime/org.opensettings.DateTimeMechanism.service])
+AC_CONFIG_FILES([src/datetime/org.opensettings.datetimemechanism.policy src/datetime/org.opensettings.DateTimeMechanism.service src/datetime/org.opensettings.DateTimeMechanism.desktop])
 
 AC_CONFIG_FILES([Makefile src/Makefile src/datetime/Makefile])
 

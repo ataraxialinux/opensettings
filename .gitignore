@@ -32,5 +32,6 @@ install-sh
 Makefile
 src/Makefile
 src/datetime/datetime-glue.h
+src/datetime/opensettings-datetime
 .deps
 .libs
