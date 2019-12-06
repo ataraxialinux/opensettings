@@ -1,0 +1,4 @@
+[D-BUS Service]
+Name=org.opensettings.DateTimeMechanism
+Exec=@bindir@/opensettings-datetime
+User=root
