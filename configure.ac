@@ -1,5 +1,5 @@
 AC_PREREQ([2.64])
-AC_INIT([opensettings], [0.1], [ataraxialinux@protonmail.ch])
+AC_INIT([opensettings], [1.2], [ataraxialinux@protonmail.ch])
 AC_CONFIG_AUX_DIR(aux-dist)
 AM_INIT_AUTOMAKE
 AM_SANITY_CHECK
