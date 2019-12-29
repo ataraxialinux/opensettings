@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=Application
-Name=GNOME Settings Daemon's datetime plugin
+Name=Time and date daemon
 Exec=@bindir@/opensettings-datetime
 OnlyShowIn=GNOME;
 NoDisplay=true

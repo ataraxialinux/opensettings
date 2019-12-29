@@ -1,1 +1,1 @@
-SUBDIRS = datetime
+SUBDIRS = datetime hostname

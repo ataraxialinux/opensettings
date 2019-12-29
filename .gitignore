@@ -33,5 +33,8 @@ Makefile
 src/Makefile
 src/datetime/datetime-glue.h
 src/datetime/opensettings-datetime
+src/hostname/hostname-glue.h
+src/hostname/hostname-glue.c
+src/hostname/opensettings-hostname
 .deps
 .libs
