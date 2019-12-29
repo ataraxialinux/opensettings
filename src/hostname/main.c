@@ -352,7 +352,7 @@ on_bus_acquired (GDBusConnection *connection,
 
 	g_debug ("Acquired a message bus connection");
 
-	hostname1 = open_settings_hostname1_skeleton_new ();
+	hostname1 = open_settings_hostname1_skeleton_new();
 
 	open_settings_hostname1_set_hostname (hostname1, hostname);
 	open_settings_hostname1_set_static_hostname (hostname1, static_hostname);

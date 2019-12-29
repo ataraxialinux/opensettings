@@ -1,4 +1,4 @@
-dbus_servicesdir = $(datadir)/dbus-1/system-services
+dbus_servicesdir = $(datadir)/dbus-1/services
 dbus_confdir = $(datadir)/dbus-1/system.d
 polkitdir = $(datadir)/polkit-1/actions
 autorundir = $(sysconfdir)/xdg/autostart
@@ -41,6 +41,7 @@ install-data-hook:
 	$(mkinstalldirs) $(DESTDIR)$(polkitdir)
 	install -m644 org.freedesktop.hostname1.desktop $(DESTDIR)$(autorundir)
 	install -m644 org.freedesktop.hostname1.service $(DESTDIR)$(dbus_servicesdir)
+	install -m644 org.freedesktop.hostname1.conf $(DESTDIR)$(dbus_confdir)
 	install -m644 org.freedesktop.hostname1.policy $(DESTDIR)$(polkitdir)
 
 CLEANFILES = 		\
