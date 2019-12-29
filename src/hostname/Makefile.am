@@ -9,7 +9,7 @@ polkit_in_files = org.freedesktop.hostname1.policy.in
 hostname-glue.h: $(srcdir)/org.freedesktop.hostname1.xml
 	$(AM_V_GEN) gdbus-codegen \
 			--interface-prefix org.freedesktop. \
-			--c-namespace MiniTimeDate --generate-c-code hostname-glue \
+			--c-namespace OpenSettings --generate-c-code hostname-glue \
 			org.freedesktop.hostname1.xml
 
 bin_PROGRAMS = opensettings-hostname
@@ -17,16 +17,20 @@ bin_PROGRAMS = opensettings-hostname
 opensettings_hostname_CFLAGS = \
         @CFLAGS@ \
         @GLIB_CFLAGS@ \
+        @GIO_CFLAGS@ \
         @DBUSGLIB_CFLAGS@ \
         @POLKIT_CFLAGS@
 
 opensettings_hostname_LDADD = \
         @GLIB_LIBS@ \
+        @GIO_LIBS@ \
         @DBUSGLIB_LIBS@ \
         @POLKIT_LIBS@
 
 opensettings_hostname_SOURCES = \
-	main.c
+	main.c \
+	hostname-glue.c \
+	common.c
 
 BUILT_SOURCES = hostname-glue.h
 
