@@ -341,3 +341,140 @@ on_handle_set_icon_name (OpenSettingsHostname1 *hostname1,
 
 	return TRUE; /* Always return TRUE to indicate signal has been handled */
 }
+
+static void
+on_bus_acquired (GDBusConnection *connection,
+                 const gchar     *bus_name,
+                 gpointer         user_data)
+{
+	gchar *name;
+	GError *err = NULL;
+
+	g_debug ("Acquired a message bus connection");
+
+	hostname1 = open_settings_hostname1_skeleton_new ();
+
+	open_settings_hostname1_set_hostname (hostname1, hostname);
+	open_settings_hostname1_set_static_hostname (hostname1, static_hostname);
+	open_settings_hostname1_set_pretty_hostname (hostname1, pretty_hostname);
+	open_settings_hostname1_set_icon_name (hostname1, icon_name);
+
+	g_signal_connect (hostname1, "handle-set-hostname", G_CALLBACK (on_handle_set_hostname), NULL);
+	g_signal_connect (hostname1, "handle-set-static-hostname", G_CALLBACK (on_handle_set_static_hostname), NULL);
+	g_signal_connect (hostname1, "handle-set-pretty-hostname", G_CALLBACK (on_handle_set_pretty_hostname), NULL);
+	g_signal_connect (hostname1, "handle-set-icon-name", G_CALLBACK (on_handle_set_icon_name), NULL);
+
+	if (!g_dbus_interface_skeleton_export (G_DBUS_INTERFACE_SKELETON (hostname1),
+					connection,
+					"/org/freedesktop/hostname1",
+					 &err)) {
+	if (err != NULL) {
+		g_critical ("Failed to export interface on /org/freedesktop/hostname1: %s", err->message);
+		exit(1);
+		}
+	}
+}
+
+static void
+on_name_acquired (GDBusConnection *connection,
+                  const gchar     *bus_name,
+                  gpointer         user_data)
+{
+	g_debug ("Acquired the name %s", bus_name);
+	component_started();
+}
+
+static void
+on_name_lost (GDBusConnection *connection,
+              const gchar     *bus_name,
+              gpointer         user_data)
+{
+	if (connection == NULL)
+		g_critical ("Failed to acquire a dbus connection");
+	else
+		g_critical ("Failed to acquire dbus name %s", bus_name);
+	exit(1);
+}
+
+void
+destroy (void)
+{
+	g_bus_unown_name (bus_id);
+	bus_id = 0;
+	read_only = FALSE;
+	g_free (hostname);
+	g_free (static_hostname);
+	g_free (pretty_hostname);
+	g_free (icon_name);
+}
+
+void
+init (gboolean _read_only)
+{
+	GError *err = NULL;
+
+	hostname = g_malloc0 (HOST_NAME_MAX + 1);
+	if (gethostname (hostname, HOST_NAME_MAX)) {
+		perror (NULL);
+		g_strlcpy (hostname, "localhost", HOST_NAME_MAX + 1);
+	}
+
+	static_hostname = read_key_file (ETC_RC_CONF, "hostname");
+	if (err != NULL) {
+		g_debug ("%s", err->message);
+		g_error_free (err);
+		err = NULL;
+	}
+	pretty_hostname = read_key_file (MACHINE_INFO, "PRETTY_HOSTNAME");
+	if (pretty_hostname == NULL)
+		pretty_hostname = g_strdup ("");
+	if (err != NULL) {
+		g_debug ("%s", err->message);
+		g_error_free (err);
+		err = NULL;
+	}
+	icon_name = read_key_file (MACHINE_INFO, "ICON_NAME");
+	if (icon_name == NULL)
+		icon_name = g_strdup ("");
+	if (err != NULL) {
+		g_debug ("%s", err->message);
+		g_error_free (err);
+		err = NULL;
+	}
+
+	if (icon_name == NULL || *icon_name == 0) {
+		g_free (icon_name);
+		icon_name = guess_icon_name ();
+	}
+
+	read_only = _read_only;
+
+	bus_id = g_bus_own_name (G_BUS_TYPE_SYSTEM,
+				"org.freedesktop.hostname1",
+				G_BUS_NAME_OWNER_FLAGS_NONE,
+				on_bus_acquired,
+				on_name_acquired,
+				on_name_lost,
+				NULL,
+				NULL);
+}
+
+gint main() {
+	GError *error = NULL;
+	GOptionContext *option_context;
+	GMainLoop *loop = NULL;
+	pid_t pid;
+
+	g_type_init();
+
+	init(read_only);
+	loop = g_main_loop_new (NULL, FALSE);
+	g_main_loop_run(loop);
+
+	g_main_loop_unref(loop);
+
+	destroy();
+
+	g_clear_error (&error);
+	exit(0);
+}
