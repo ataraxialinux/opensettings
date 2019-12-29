@@ -15,10 +15,10 @@
 #include "common.h"
 #include "hostname-glue.h"
 
-
 #define QUOTE(macro) #macro
 #define STR(macro) QUOTE(macro)
 #define ETC_RC_CONF "/etc/rc.conf"
+#define MACHINE_INFO "/etc/machine-info"
 
 guint bus_id = 0;
 gboolean read_only = FALSE;
@@ -243,7 +243,7 @@ on_handle_set_pretty_hostname_authorized_cb (GObject *source_object,
 	if (data->name == NULL)
 	data->name = g_strdup ("");
 
-	if (!read_key_file (ETC_RC_CONF, "prettyname")) {
+	if (!read_key_file (MACHINE_INFO, "PRETTY_HOSTNAME")) {
 		g_dbus_method_invocation_return_gerror (data->invocation, err);
 		G_UNLOCK (machine_info);
 		goto out;
@@ -278,6 +278,65 @@ on_handle_set_pretty_hostname (OpenSettingsHostname1 *hostname1,
 		data->invocation = invocation;
 		data->name = g_strdup (name);
 		check_polkit_async (g_dbus_method_invocation_get_sender (invocation), "org.freedesktop.hostname1.set-machine-info", user_interaction, on_handle_set_pretty_hostname_authorized_cb, data);
+	}
+
+	return TRUE; /* Always return TRUE to indicate signal has been handled */
+}
+
+static void
+on_handle_set_icon_name_authorized_cb (GObject *source_object,
+                                       GAsyncResult *res,
+                                       gpointer user_data)
+{
+	GError *err = NULL;
+	struct invoked_name *data;
+    
+	data = (struct invoked_name *) user_data;
+	if (!check_polkit_finish (res, &err)) {
+		g_dbus_method_invocation_return_gerror (data->invocation, err);
+		goto out;
+	}
+
+	G_LOCK (machine_info);
+	/* Don't allow a null pretty hostname */
+	if (data->name == NULL)
+		data->name = g_strdup ("");
+
+	if (!read_key_file (MACHINE_INFO, "ICON_NAME")) {
+		g_dbus_method_invocation_return_gerror (data->invocation, err);
+		G_UNLOCK (machine_info);
+		goto out;
+	}
+
+	g_free (icon_name);
+	icon_name = data->name; /* data->name is g_strdup-ed already */
+	open_settings_hostname1_complete_set_icon_name (hostname1, data->invocation);
+	open_settings_hostname1_set_icon_name (hostname1, icon_name);
+	G_UNLOCK (machine_info);
+
+	out:
+		g_free (data);
+		if (err != NULL)
+			g_error_free (err);
+}
+
+static gboolean
+on_handle_set_icon_name (OpenSettingsHostname1 *hostname1,
+                         GDBusMethodInvocation *invocation,
+                         const gchar *name,
+                         const gboolean user_interaction,
+                         gpointer user_data)
+{
+	if (read_only)
+		g_dbus_method_invocation_return_dbus_error (invocation,
+                                                    DBUS_ERROR_NOT_SUPPORTED,
+                                                    "opensetiings-hostname is in read-only mode");
+	else {
+		struct invoked_name *data;
+		data = g_new0 (struct invoked_name, 1);
+		data->invocation = invocation;
+		data->name = g_strdup (name);
+		check_polkit_async (g_dbus_method_invocation_get_sender (invocation), "org.freedesktop.hostname1.set-machine-info", user_interaction, on_handle_set_icon_name_authorized_cb, data);
 	}
 
 	return TRUE; /* Always return TRUE to indicate signal has been handled */
