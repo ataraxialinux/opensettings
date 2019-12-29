@@ -37,7 +37,6 @@ install-data-hook:
 	$(mkinstalldirs) $(DESTDIR)$(polkitdir)
 	install -m644 org.freedesktop.hostname1.desktop $(DESTDIR)$(autorundir)
 	install -m644 org.freedesktop.hostname1.service $(DESTDIR)$(dbus_servicesdir)
-	install -m644 org.freedesktop.hostname1.conf $(DESTDIR)$(dbus_confdir)
 	install -m644 org.freedesktop.hostname1.policy $(DESTDIR)$(polkitdir)
 
 CLEANFILES = 		\
