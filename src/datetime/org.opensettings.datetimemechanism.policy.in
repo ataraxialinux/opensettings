@@ -4,9 +4,8 @@
  "http://www.freedesktop.org/standards/PolicyKit/1.0/policyconfig.dtd">
 
 <policyconfig>
-  <vendor>The GNOME Project</vendor>
-  <vendor_url>http://www.gnome.org/</vendor_url>
-  <icon_name>gnome-panel-clock</icon_name>
+    <vendor>Ataraxia Linux</vendor>
+    <vendor_url>http://ataraxialinux.github.io/</vendor_url>
 
   <action id="org.opensettings.datetimemechanism.configure">
     <_description>Change system time and date settings</_description>

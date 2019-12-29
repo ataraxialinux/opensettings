@@ -2,8 +2,8 @@
 <!DOCTYPE policyconfig PUBLIC "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN" "http://www.freedesktop.org/standards/PolicyKit/1/policyconfig.dtd">
 
 <policyconfig>
-    <vendor>Gentoo Linux</vendor>
-    <vendor_url>http://www.gentoo.org/proj/en/desktop/gnome/openrc-settingsd.xml</vendor_url>
+    <vendor>Ataraxia Linux</vendor>
+    <vendor_url>http://ataraxialinux.github.io/</vendor_url>
 
     <action id="org.freedesktop.hostname1.set-hostname">
         <description>Set local host name</description>
